@@ -5,7 +5,7 @@ use WAJ\Lib\Log\SimpleObjLog;
 require 'src/SimpleObjLog.php';
 
 
-$log = new SimpleObjLog('coin.log');
+$log = new SimpleObjLog('coins.log', false);
 
 $log->log('order', [
 
