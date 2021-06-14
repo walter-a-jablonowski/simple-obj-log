@@ -1,0 +1,29 @@
+{
+  "name": "walter-a-jablonowski/simple-obj-log",
+  "description": "Simple log with object entries, no plain text",
+  "type": "library",
+  "keywords": ["php", "log", "object", "csv", "json", "yaml"],
+  "homepage": "https://github.com/walter-a-jablonowski/simple-obj-log",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Walter A. Jablonowski",
+      "email": "walter.a.jablonowski@gmail.com",
+      "homepage": "https://walter-a-jablonowski.github.io",
+      "role": "Developer"
+    }
+  ],
+
+  "prefer-stable": true,
+  "minimum-stability": "dev",
+
+  "require": {
+    "symfony/yaml": ">=5.1.3-stable"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "WAJ\\Lib\\Debug\\": "src/"
+   }
+  }
+}
