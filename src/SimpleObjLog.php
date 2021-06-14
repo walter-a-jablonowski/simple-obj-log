@@ -46,7 +46,7 @@ final class SimpleObjLog  /*@*/
 
     // TASK: ...
 
-    $this->config = array_merge( $this->config, $config );
+    $this->config = array_merge_recursive( $this->config, $config );
   }
   
   /*@
