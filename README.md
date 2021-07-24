@@ -13,14 +13,14 @@ processing data with standard tools easy.
 composer update
 ```
 
-- As CSV and YML have less structure than a graph we only can print what is possible in these formats
+- CSV and YML have less structure than a graph we only can print what is possible in these formats
   - CSV: one level only
   - YML: a tree which is a specialised version of a graph
-- Pass full objects, lib only adds very basic like time, e.g. event object which has all data needed
+- Pass full objects, e.g. event object which has all data needed
+  - lib adds basic additional info like: type and if configured time
 - Log a graph by having an obj member (array) that has all linked obj
   - array with definable member
   - or array with definable link class and member
-- Print normal member assiciations just as #id (too much)
 
 
 **Currently**
@@ -33,6 +33,7 @@ composer update
 maybe ...
 
 - [ ] Seriailise objects using Reflection
+- [ ] ~~Print normal member assiciations just as #id~~ (too much)
 
 
 **CSV only prints first level, no links**
