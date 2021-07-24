@@ -1,6 +1,6 @@
 # SimpleObjLog
 
-**currently in dev**
+***currently in dev***
 
 Instead of just plain text logs should countain data. Best would be a log saves objects of different types,
 that have shared columns like time in front. In general graph obj should be prefered, that can be linked
@@ -26,7 +26,6 @@ composer update
 **Currently**
 
 - only arrays can be passed
-- only one level of linked fields, more might be too much for now
 
 
 ## Advanced
@@ -44,6 +43,8 @@ time, #3253, data, ...
 ```
 
 **YML prints one level of linked data**
+
+only one level of linked fields, more might be too much for now
 
 ```yaml
 time: [ log: data ]
