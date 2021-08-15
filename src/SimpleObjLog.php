@@ -10,9 +10,9 @@ use Symfony\Component\Yaml\Exception\ParseException;
 
 SimpleObjLog
 
-- no type hinting, be conpatible old versions
-
-Code should stay simple
+DEV-COMMENTS:
+  - no type hinting, be conpatible old versions
+  - Code should stay simple
 
 */
 final class SimpleObjLog /*@*/
@@ -20,13 +20,27 @@ final class SimpleObjLog /*@*/
 
   private $log;
   private $config = [
+
+    // general config
+
     'format'      => 'csv',
     'addTime'     => true,
+    'timeField'   => '@time',
     'useMS'       => true,
+    'addType'     => true,
+    'typeField'   => '@type',
+
+    // input data
+
+    // obj data only
     'linksMember' => 'xlinks',          // advanced optional
     // 'linkClass'       => 'MyClass',
     // 'linkClassMember' => 'MyClass',  
-    'delim'       => ';'                // csv only
+
+    // format
+
+    // csv only
+    'delim'       => ';'                
   ];
 
 
@@ -68,41 +82,65 @@ final class SimpleObjLog /*@*/
 
   /*@
 
-  Merges time and type in front
+  Log
+
+  - merges time and type in front
 
   ARGS:
-    obj: just an array
+    objType:
+    obj:  
 
+  TASKS: see Readme and mngm
+  
   */
   public function log( $objType, $obj ) /*@*/
   {
+    // Data
+
+    // if logging php obj frist of all make array
+    $o = $obj;
+    $obj = [];
+
+    // add time
+
     if( $this->config['addTime'] )
     {
+      $timeField = $this->config['timeField'];
+
       if( $this->config['useMS'] )
-        $time = (new \DateTime())->format('Y-m-d H:i:s.u');  // date() has no .u
+        $obj[$timeField] = (new \DateTime())->format('Y-m-d H:i:s.u');  // date() has no .u
       else
-        $time = (new \DateTime())->format('Y-m-d H:i:s');
+        $obj[$timeField] = (new \DateTime())->format('Y-m-d H:i:s');
     }
+
+    // add type
+
+    if( $this->config['addType'] )
+    {
+      $typeField = $this->config['typeField'];
+      $obj[$typeField] = $objType;
+    }
+
+    // merge data
+
+    $obj = array_merge( $obj, $o );
 
 
     switch( $this->config['format'] )
     {
       case 'csv':
 
-        // print header
+        // print header if empty
 
         if( ! is_file($this->log) || trim( file_get_contents($this->log)) === '' )
         {
-          $s = ( $this->config['addTime'] )  ?  'time|type|object_data'  :  'type|object_data';
+          $s = '';
+          $s .= ( $this->config['addTime'] )  ?  'time|'  :  $s;
+          $s .= ( $this->config['addType'] )  ?  'type|'  :  $s;
+          $s .= 'object_data';
+          
           file_put_contents( $this->log, implode($this_config['delim'], explode('|', $s)));
         }
-
-        // add time
-
-        if( $this->config['addTime'] )
-          $obj = array_merge( ['@time' => $time, '@type' => $objType], $obj );
-        else
-          $obj = array_merge( ['@type' => $objType], $obj );
 
         // log
 
@@ -122,7 +160,7 @@ final class SimpleObjLog /*@*/
         break;
 
 
-      case 'csv':
+      case 'yml':
 
         $s = Yaml::dump( $obj, 2, 2 );  // use multi line, indent
 

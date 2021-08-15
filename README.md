@@ -1,6 +1,6 @@
 # SimpleObjLog
 
-***currently in dev***
+***Currently in dev:*** only arrays can be passed
 
 Instead of just plain text logs should countain data. Best would be a log saves objects of different types,
 that have shared columns like time in front. In general graph obj should be prefered, that can be linked
@@ -23,20 +23,19 @@ composer update
   - or array with definable link class and member
 
 
-**Currently**
-
-- only arrays can be passed
-
-
 ## Advanced
 
 maybe ...
 
-- [ ] Seriailise objects using Reflection
-- [ ] ~~Print normal member assiciations just as #id~~ (too much)
+- [ ] Add type can be from a field in array
+- [ ] Seriailise objects using Reflection (type will be obj type)
+  - type should stay first param
+- [ ] ~~Print normal member associations just as #id~~ (too much)
 
 
 **CSV only prints first level, no links**
+
+we could infact print one level inline `field; {linked: obj-data}`
 
 ```csv
 time, #3421, data, #3253
