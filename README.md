@@ -2,54 +2,53 @@
 
 ***Currently in dev:*** only arrays can be passed
 
-Instead of just plain text logs should countain data. Best would be a log saves objects of different types,
-that have shared columns like time in front. In general graph obj should be prefered, that can be linked
-freely (always best). Fix links are a limitation. Types could share more common cols in front.
+Instead of just plain text logs should contain data. Best would be a log saves objects of different types,
+that have shared columns like time in front. It saves in standard formats instead proprietary log file format:
+csv, json, yaml or Db table. This makes processing data with standard tools easy.
 
-Save in standard formats instaead proprietary log file format: just as csv, json, yaml or Db table. This makes
-processing data with standard tools easy.
+In general graph obj should be prefered, that can be linked freely (always best). Fix links are a limitation.
+CSV and YML have less structure than a graph we only can print what is possible. Basically a tree can be printed
+with a root obj in the main record and nested obj (see also below). More links can only be printed as ids (possible
+future version).
 
 ```
 composer update
 ```
 
-- CSV and YML have less structure than a graph we only can print what is possible in these formats
-  - CSV: one level only
-  - YML: a tree which is a specialised version of a graph
 - Pass full objects, e.g. event object which has all data needed
-  - lib adds basic additional info like: type and if configured time
-- Log a graph by having an obj member (array) that has all linked obj
-  - array with definable member
-  - or array with definable link class and member
+  - lib adds only basic common fields if configured: time and type in front
+- Multiple logs in a file: manually add a column with log identifier
+- Misc shared columns the same
 
 
 ## Advanced
 
 maybe ...
 
-- [ ] Add type can be from a field in array
-- [ ] Seriailise objects using Reflection (type will be obj type)
-  - type should stay first param
-- [ ] ~~Print normal member associations just as #id~~ (too much)
+- [ ] Type from a field in array
+- [ ] Seriailise objects using Reflection
+- [ ] Print normal member associations and loops in embedded obj as #id
+  - we also need the id in printed obj
+- [ ] Use link class see config
 
 
 **CSV only prints first level, no links**
 
-we could infact print one level inline `field; {linked: obj-data}`
+- Currenlty only links fields will be serialised
+- serialise more yourself
 
 ```csv
-time, #3421, data, #3253
-time, #3253, data, ...
+time, MyType, #3421, data, #3253, {linked: obj-data}  # obj ids currently uninplemented
+time, MyType, #3253, data, ...
 ```
 
 **YML prints one level of linked data**
 
-only one level of linked fields, more might be too much for now
-
 ```yaml
-time: [ log: data ]
+time: [ type: MyType, log: data ]
 time:
-  data: [ log: data ]
+  type: MyType
+  log:  data
   linked:
     time: [ log: data ]
 ```

@@ -23,24 +23,17 @@ final class SimpleObjLog /*@*/
 
     // general config
 
-    'format'      => 'csv',
-    'addTime'     => true,
-    'timeField'   => '@time',
-    'useMS'       => true,
-    'addType'     => true,
-    'typeField'   => '@type',
+    'format'       => 'csv',
+    'delim'        => ';',      // csv only
+    'addTime'      => true,
+    'timeField'    => 'time',
+    'useMS'        => true,
+    'addType'      => true,
+    'typeField'    => 'type',
+    // 'linkClass' => 'MyClass'
+    'addLinks'     => false,
+    'linksField'   => 'xlinks'
 
-    // input data
-
-    // obj data only
-    'linksMember' => 'xlinks',          // advanced optional
-    // 'linkClass'       => 'MyClass',
-    // 'linkClassMember' => 'MyClass',  
-
-    // format
-
-    // csv only
-    'delim'       => ';'                
   ];
 
 
@@ -121,6 +114,19 @@ final class SimpleObjLog /*@*/
       $obj[$typeField] = $objType;
     }
 
+    // get links
+
+    $linkedObj = [];
+    $linksField = $this->config['linksField'];
+
+    if( $this->config['addLinks'] )
+    {
+      $linkedObj = $o[$linksField];
+    }
+
+    if( isset($o[$linksField]) )
+      unset($o[$linksField]);
+
     // merge data
 
     $obj = array_merge( $obj, $o );
@@ -141,6 +147,14 @@ final class SimpleObjLog /*@*/
           
           file_put_contents( $this->log, implode($this_config['delim'], explode('|', $s)));
         }
+
+        // add links
+
+        if( $linkedObj )
+          $obj[$linksField] = json_encode( $linkedObj );
+
+        var_dump( $linkedObj );
+        var_dump( json_encode( $linkedObj ));
 
         // log
 
@@ -165,7 +179,7 @@ final class SimpleObjLog /*@*/
         $s = Yaml::dump( $obj, 2, 2 );  // use multi line, indent
 
         // TASK: add time ad key, type?
-        // TASK: print one level of linked obj in linksMember
+        // TASK: print linksField
 
         // $this->prepareStructured()
 
