@@ -21,18 +21,7 @@ composer update
 - Misc shared columns the same
 
 
-## Advanced
-
-maybe ...
-
-- [ ] Type from a field in array
-- [ ] Seriailise objects using Reflection
-- [ ] Print normal member associations and loops in embedded obj as #id
-  - we also need the id in printed obj
-- [ ] Use link class see config
-
-
-**CSV only prints first level, no links**
+## CSV only prints first level, no links
 
 - Currenlty only links fields will be serialised
 - serialise more yourself
@@ -42,7 +31,8 @@ time, MyType, #3421, data, #3253, {linked: obj-data}  # obj ids currently uninpl
 time, MyType, #3253, data, ...
 ```
 
-**YML prints one level of linked data**
+
+## YML prints one level of linked data
 
 ```yaml
 time: [ type: MyType, log: data ]
@@ -52,6 +42,17 @@ time:
   linked:
     time: [ log: data ]
 ```
+
+
+## Advanced
+
+maybe ...
+
+- [ ] Type from a field in array
+- [ ] Seriailise objects using Reflection
+- [ ] Print normal member associations and loops in embedded obj as #id
+  - we also need the id in printed obj
+- [ ] Use link class see config
 
 
 ## LICENSE
