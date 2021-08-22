@@ -25,6 +25,9 @@ final class SimpleObjLog /*@*/
 
     'format'       => 'csv',
     'delim'        => ';',      // csv only
+    // 'addId'     => false,
+    // 'idField'   => 'id',
+    // 'cache'     => 'simple_obj_log_cache/',
     'addTime'      => true,
     'timeField'    => 'time',
     'useMS'        => true,

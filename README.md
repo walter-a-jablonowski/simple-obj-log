@@ -49,7 +49,10 @@ time:
 
 maybe ...
 
+- [ ] Line id (sequence) use $log as name, hash or similar
 - [ ] Type from a field in array
+  - type must be param in log?
+- [ ] Type and links might have different name in output
 - [ ] Serialise objects using Reflection
 - [ ] Print normal member associations and loops in embedded obj as #id
   - we also need the id in printed obj
