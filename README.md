@@ -4,9 +4,9 @@
 
 Instead of just plain text logs should contain data. Best would be a log saves objects of different types,
 that have shared columns like time in front. It saves in standard formats instead proprietary log file format:
-csv, json, yaml or Db table. This makes processing data with standard tools easy.
+csv, json, yml or DB table. This makes processing data with standard tools easy.
 
-In general graph obj should be prefered, that can be linked freely (always best). Fix links are a limitation.
+In general graph obj should be prefered, that can be linked freely (always best). Fix links are limitations.
 CSV and YML have less structure than a graph we only can print what is possible. Basically a tree can be printed
 with a root obj in the main record and nested obj (see also below). More links can only be printed as ids (possible
 future version).
@@ -21,18 +21,19 @@ composer update
 - Misc shared columns the same
 
 
-## CSV only prints first level, no links
+## CSV
 
 - Currenlty only links fields will be serialised
 - serialise more yourself
+- obj ids currently uninplemented
 
 ```csv
-time, MyType, #3421, data, #3253, {linked: obj-data}  # obj ids currently uninplemented
+time, MyType, #3421, data, #3253, {linked: obj-data}
 time, MyType, #3253, data, ...
 ```
 
 
-## YML prints one level of linked data
+## YML
 
 ```yaml
 time: [ type: MyType, log: data ]
