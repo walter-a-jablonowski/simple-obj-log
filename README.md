@@ -15,7 +15,7 @@ future version).
 composer update
 ```
 
-- Pass full objects, e.g. event object which has all data needed
+- Pass full obj, e.g. event object which has all data needed
   - lib adds only basic common fields if configured: time and type in front
 - Multiple logs in a file: manually add a column with log identifier
 - Misc shared columns the same
@@ -23,7 +23,7 @@ composer update
 
 ## CSV
 
-- Currenlty only links fields will be serialised
+- Currenlty only the links field will be serialised
 - serialise more yourself
 - obj ids currently uninplemented
 
