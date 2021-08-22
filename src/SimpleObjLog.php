@@ -153,9 +153,6 @@ final class SimpleObjLog /*@*/
         if( $linkedObj )
           $obj[$linksField] = json_encode( $linkedObj );
 
-        var_dump( $linkedObj );
-        var_dump( json_encode( $linkedObj ));
-
         // log
 
         file_put_contents( $this->log,

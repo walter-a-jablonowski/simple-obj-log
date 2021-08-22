@@ -50,7 +50,7 @@ time:
 maybe ...
 
 - [ ] Type from a field in array
-- [ ] Seriailise objects using Reflection
+- [ ] Serialise objects using Reflection
 - [ ] Print normal member associations and loops in embedded obj as #id
   - we also need the id in printed obj
 - [ ] Use link class see config
