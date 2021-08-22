@@ -1,6 +1,6 @@
 <?php
 
-use WAJ\Lib\Log\SimpleObjLog;
+use WAJ\Lib\Logs\SimpleObjLog;
 
 require 'src/SimpleObjLog.php';
 

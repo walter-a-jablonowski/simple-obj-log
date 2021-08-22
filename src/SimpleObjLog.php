@@ -1,6 +1,6 @@
 <?php
 
-namespace WAJ\Lib\Log;
+namespace WAJ\Lib\Logs;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
