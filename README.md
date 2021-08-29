@@ -32,6 +32,10 @@ time, MyType, #3421, data, #3253, {linked: obj-data}
 time, MyType, #3253, data, ...
 ```
 
+```php
+$log->setConfig(['fillCSV' => 15]);  // fill csv at least 15 fields
+```
+
 
 ## YML
 

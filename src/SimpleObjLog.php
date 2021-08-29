@@ -25,6 +25,7 @@ final class SimpleObjLog /*@*/
 
     'format'       => 'csv',
     'delim'        => ';',      // csv only
+    'fillCSV'      => 0,        // csv only
     // 'addId'     => false,
     // 'idField'   => 'id',
     // 'cache'     => 'simple_obj_log_cache/',
@@ -91,13 +92,11 @@ final class SimpleObjLog /*@*/
   */
   public function log( $objType, $obj ) /*@*/
   {
-    // Data
-
     // if logging php obj frist of all make array
     $o = $obj;
     $obj = [];
 
-    // add time
+    // Add time
 
     if( $this->config['addTime'] )
     {
@@ -109,7 +108,7 @@ final class SimpleObjLog /*@*/
         $obj[$timeField] = (new \DateTime())->format('Y-m-d H:i:s');
     }
 
-    // add type
+    // Add type
 
     if( $this->config['addType'] )
     {
@@ -117,7 +116,7 @@ final class SimpleObjLog /*@*/
       $obj[$typeField] = $objType;
     }
 
-    // get links
+    // Get links (see below)
 
     $linkedObj = [];
     $linksField = $this->config['linksField'];
@@ -130,7 +129,7 @@ final class SimpleObjLog /*@*/
     if( isset($o[$linksField]) )
       unset($o[$linksField]);
 
-    // merge data
+    // Merge data
 
     $obj = array_merge( $obj, $o );
 
@@ -139,28 +138,42 @@ final class SimpleObjLog /*@*/
     {
       case 'csv':
 
-        // print header if empty
+        // Record
 
-        if( ! is_file($this->log) || trim( file_get_contents($this->log)) === '' )
-        {
-          $s = '';
-          $s .= ( $this->config['addTime'] )  ?  'time|'  :  $s;
-          $s .= ( $this->config['addType'] )  ?  'type|'  :  $s;
-          $s .= 'object_data';
-          
-          file_put_contents( $this->log, implode($this_config['delim'], explode('|', $s)));
-        }
+        $rec = implode( $this->config['delim'], $obj);
+        $delim = $this->config['delim'];
 
-        // add links
+        // Add links
 
         if( $linkedObj )
           $obj[$linksField] = json_encode( $linkedObj );
 
-        // log
+        // Fill csv fields
+        
+        $fill = $this->config['fillCSV'] - 1;
+        
+        $times = 0;
+        if( $fill > 0 && substr_count($rec, $delim) < $fill)
+          $times = $fill - substr_count($rec, $delim);
+        
+        $rec .= str_repeat( $delim, $times);
 
-        file_put_contents( $this->log,
-          "\n" . implode( $this->config['delim'], $obj), FILE_APPEND
-        );
+        // Print header if empty
+
+        if( ! is_file($this->log) || trim( file_get_contents($this->log)) === '' )
+        {
+          $header = '';
+          $header .= ( $this->config['addTime'] )  ?  'time|'  :  $header;
+          $header .= ( $this->config['addType'] )  ?  'type|'  :  $header;
+          $header .= 'object_data';
+          $header .= str_repeat( $delim, $times);
+          
+          file_put_contents( $this->log, implode($delim, explode('|', $header)));
+        }
+
+        // Log
+
+        file_put_contents( $this->log, "\n" . $rec, FILE_APPEND );
 
         break;
 
