@@ -6,7 +6,6 @@ require 'src/SimpleObjLog.php';
 
 
 $log = new SimpleObjLog('coins.log');
-$log->setConfig(['addLinks' => true]);
 
 $log->log('order', [
 
@@ -17,8 +16,8 @@ $log->log('order', [
   'id'       => '8r2u98jf7843ufjht893gj4328032',
   'xlinks'   => [
     [
-      'some'     => 'details',
-      'bla'      => 1
+      'some' => 'details',
+      'bla'  => 1
     ]
   ]
 ]);

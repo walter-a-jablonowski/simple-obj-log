@@ -32,11 +32,9 @@ final class SimpleObjLog /*@*/
     'addTime'      => true,
     'timeField'    => 'time',
     'useMS'        => true,
-    'addType'      => true,
     'typeField'    => 'type',
     // 'linkClass' => 'MyClass'
-    'addLinks'     => false,
-    'linksField'   => 'xlinks'
+    'linkedField'  => 'linkedGraph'
 
   ];
 
@@ -84,71 +82,70 @@ final class SimpleObjLog /*@*/
   - merges time and type in front
 
   ARGS:
-    objType:
-    obj:  
+    type:
+    obj:
+    linkedGraph:  if given graph is passed seperately ins of inside obj (useful if it is seperate vars)
 
   TASKS: see Readme and mngm
   
   */
-  public function log( $objType, $obj ) /*@*/
+  public function log( $type, $obj, $linkedGraph = [] ) /*@*/
   {
-    // if logging php obj frist of all make array
-    $o = $obj;
-    $obj = [];
+    $rec = [];
+
+    $timeField   = $this->config['timeField'];
+    $typeField   = $this->config['typeField'];
+    $linkedField = $this->config['linkedField'];
+
 
     // Add time
 
     if( $this->config['addTime'] )
     {
-      $timeField = $this->config['timeField'];
-
       if( $this->config['useMS'] )
-        $obj[$timeField] = (new \DateTime())->format('Y-m-d H:i:s.u');  // date() has no .u
+        $rec[$timeField] = (new \DateTime())->format('Y-m-d H:i:s.u');  // date() has no .u
       else
-        $obj[$timeField] = (new \DateTime())->format('Y-m-d H:i:s');
+        $rec[$timeField] = (new \DateTime())->format('Y-m-d H:i:s');
     }
+
 
     // Add type
 
-    if( $this->config['addType'] )
-    {
-      $typeField = $this->config['typeField'];
-      $obj[$typeField] = $objType;
-    }
+    $rec[$typeField] = $type;
 
-    // Get links (see below)
 
-    $linkedObj = [];
-    $linksField = $this->config['linksField'];
+    // Fields
 
-    if( $this->config['addLinks'] )
-    {
-      $linkedObj = $o[$linksField];
-    }
+    $rec = array_merge($rec, $obj);
 
-    if( isset($o[$linksField]) )
-      unset($o[$linksField]);
 
-    // Merge data
+    // Add linked graph if given seperately
 
-    $obj = array_merge( $obj, $o );
+    if( $linkedGraph )
+      $rec[$linkedField] = $linkedGraph;
 
 
     switch( $this->config['format'] )
     {
       case 'csv':
 
-        // Record
-
-        $rec = implode( $this->config['delim'], $obj);
         $delim = $this->config['delim'];
+        $csv = $rec;
 
-        // Add links
 
-        if( $linkedObj )
-          $obj[$linksField] = json_encode( $linkedObj );
+        // Encode linked graph
+
+        if( $csv[$linkedField] )
+          $csv[$linkedField] = json_encode( $csv[$linkedField] );
+
+
+        // Implode
+
+        $csv = implode( $delim, $csv);
+
 
         // Fill csv fields
+        // TASK: CAN be improved
         
         $fill = $this->config['fillCSV'] - 1;
         
@@ -156,24 +153,27 @@ final class SimpleObjLog /*@*/
         if( $fill > 0 && substr_count($rec, $delim) < $fill)
           $times = $fill - substr_count($rec, $delim);
         
-        $rec .= str_repeat( $delim, $times);
+        $csv .= str_repeat( $delim, $times);
+
 
         // Print header if empty
 
         if( ! is_file($this->log) || trim( file_get_contents($this->log)) === '' )
         {
           $header = '';
-          $header .= ( $this->config['addTime'] )  ?  'time|'  :  $header;
-          $header .= ( $this->config['addType'] )  ?  'type|'  :  $header;
-          $header .= 'object_data';
+          $header .= ( $this->config['addTime'] )  ?  "time$delim"  :  $header;
+          $header .= "type$delim";
+          $header .= implode( $delim, array_keys($rec)) . $delim;
+          $header .= $linkedField;
           $header .= str_repeat( $delim, $times);
           
-          file_put_contents( $this->log, implode($delim, explode('|', $header)));
+          file_put_contents( $this->log, $header);
         }
+
 
         // Log
 
-        file_put_contents( $this->log, "\n" . $rec, FILE_APPEND );
+        file_put_contents( $this->log, "\n" . $csv, FILE_APPEND );
 
         break;
 
@@ -192,7 +192,7 @@ final class SimpleObjLog /*@*/
         $s = Yaml::dump( $obj, 2, 2 );  // use multi line, indent
 
         // TASK: add time ad key, type?
-        // TASK: print linksField
+        // TASK: print linkedField
 
         // $this->prepareStructured()
 

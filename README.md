@@ -3,8 +3,8 @@
 ***Currently in dev:*** only arrays can be passed
 
 Instead of just plain text logs should contain data. Best would be a log saves objects of different types,
-that have shared columns like time in front. It saves in standard formats instead proprietary log file format:
-csv, json, yml or DB table. This makes processing data with standard tools easy.
+that have shared type and may have more columns like time or id in front. It saves in standard formats instead proprietary
+log file format: csv, json, yml or DB table. This makes processing data with standard tools easy.
 
 In general graph obj should be prefered, that can be linked freely (always best). Fix links are limitations.
 CSV and YML have less structure than a graph we only can print what is possible. Basically a tree can be printed
@@ -18,34 +18,41 @@ composer update
 - Pass full obj, e.g. event object which has all data needed
   - lib adds only basic common fields if configured: time and type in front
 - Multiple logs in a file: manually add a column with log identifier
-- Misc shared columns the same
+- Misc shared cols and place column the same
+- Foreign id's (unimplemented)
 
 
 ## CSV
 
-- Currenlty only the links field will be serialised
-- serialise more yourself
-- obj ids currently uninplemented
-
-```csv
-time, MyType, #3421, data, #3253, {linked: obj-data}
-time, MyType, #3253, data, ...
-```
+obj that isn't in from linkedGraph field are printed as ids (currently uninplemented)
 
 ```php
 $log->setConfig(['fillCSV' => 15]);  // fill csv at least 15 fields
 ```
 
+```csv
+time; type;   id;    data; someid; linkedGraph
+time; MyType; #3421; data; #3253;  [[obj-data ...}, ...]
+time; MyType; #3253; data; ...
+```
+
 
 ## YML
 
+unimplemented, entries sorted by place, time
+
 ```yaml
-time: [ type: MyType, log: data ]
-time:
-  type: MyType
-  log:  data
-  linked:
-    time: [ log: data ]
+place 1:
+  place 2:
+    time:
+      type: MyType
+      id:   "#1234"
+      my:   data
+      linkedGraph:
+        - time: [ my: data ]
+          ...
+    place 3:
+    ...
 ```
 
 
@@ -53,19 +60,19 @@ time:
 
 maybe ...
 
-- [ ] Line id (sequence) use $log as name, hash or similar
-- [ ] Type from a field in array
+- [ ] sequence for id, maybe use $log prefix (multiple)
+- [x] Type from a field in array
   - type must be param in log?
-- [ ] Type and links might have different name in output
-- [ ] Serialise objects using Reflection
-- [ ] Print normal member associations and loops in embedded obj as #id
-  - we also need the id in printed obj
+- [ ] Serialise $obj using Reflection (whole graph)
+- [ ] Provide a michanism that makes unique ids from obj in cols that aren't linkedGraph
+- [ ] Print obj that isn't in from linkedGraph field as ids
+  - we also need the id in linkedGraph
 - [ ] Use link class see config
 
 
 ## LICENSE
 
-Copyright (C) Walter A. Jablonowski 2021, MIT [License](LICENSE)
+Copyright (C) Walter A. Jablonowski 2021-2022, MIT [License](LICENSE)
 
 Licenses of third party software used in samples see [credits](credits.md).
 
